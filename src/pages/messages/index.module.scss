@@ -1,0 +1,172 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  padding: $spacing-lg $page-padding;
+  background: $color-bg-page;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.searchIcon {
+  font-size: $font-size-lg;
+  color: $color-text-tertiary;
+}
+
+.searchInput {
+  flex: 1;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+
+  &::placeholder {
+    color: $color-text-disabled;
+  }
+}
+
+.messageList {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.messageItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  border-bottom: 1rpx solid $color-divider;
+  transition: background $transition-fast;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:active {
+    background: $color-bg-hover;
+  }
+}
+
+.avatarWrapper {
+  position: relative;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: $radius-round;
+  background: $color-bg-hover;
+}
+
+.unreadBadge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  min-width: 36rpx;
+  height: 36rpx;
+  padding: 0 10rpx;
+  background: $color-error;
+  color: $color-text-white;
+  border-radius: $radius-round;
+  font-size: 20rpx;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.messageContent {
+  flex: 1;
+  min-width: 0;
+  margin-right: $spacing-md;
+}
+
+.messageTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+}
+
+.userName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  @include text-ellipsis;
+  max-width: 360rpx;
+}
+
+.userNameUnread {
+  font-weight: $font-weight-bold;
+}
+
+.lastTime {
+  font-size: 20rpx;
+  color: $color-text-tertiary;
+  flex-shrink: 0;
+  margin-left: $spacing-sm;
+}
+
+.lastTimeUnread {
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.lastContent {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  line-height: $line-height-normal;
+  @include text-ellipsis;
+}
+
+.lastContentUnread {
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+.swipeHint {
+  font-size: 20rpx;
+  color: $color-text-disabled;
+  flex-shrink: 0;
+}
+
+.swipeActions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: stretch;
+  transform: translateX(100%);
+  transition: transform $transition-base;
+}
+
+.swipeAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160rpx;
+  color: $color-text-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.actionRead {
+  background: $color-primary;
+}
+
+.actionDelete {
+  background: $color-error;
+}

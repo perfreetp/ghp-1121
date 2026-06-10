@@ -1,0 +1,271 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  padding: $spacing-lg $page-padding $spacing-xl;
+  background: $color-bg-page;
+}
+
+.scoreHeader {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -100rpx;
+    right: -100rpx;
+    width: 300rpx;
+    height: 300rpx;
+    background: rgba(201, 169, 97, 0.15);
+    border-radius: $radius-round;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -80rpx;
+    left: -80rpx;
+    width: 240rpx;
+    height: 240rpx;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: $radius-round;
+  }
+}
+
+.scoreValue {
+  font-size: 120rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  line-height: 1;
+  z-index: 1;
+}
+
+.scoreLevel {
+  padding: $spacing-xs $spacing-lg;
+  background: rgba(201, 169, 97, 0.9);
+  color: $color-text-white;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  z-index: 1;
+}
+
+.scoreLabel {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+}
+
+.explanationCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.explanationText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.card {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-md;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.cardTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.cardIcon {
+  font-size: 32rpx;
+}
+
+.rulesList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.ruleItem {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-md;
+}
+
+.ruleType {
+  flex-shrink: 0;
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+}
+
+.ruleTypePlus {
+  background: rgba(134, 176, 73, 0.15);
+  color: $color-accent;
+}
+
+.ruleTypeMinus {
+  background: rgba(231, 76, 60, 0.12);
+  color: $color-error;
+}
+
+.ruleContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.ruleItemRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-sm;
+}
+
+.ruleItemName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.ruleScore {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  flex-shrink: 0;
+}
+
+.ruleScorePlus {
+  color: $color-accent;
+}
+
+.ruleScoreMinus {
+  color: $color-error;
+}
+
+.ruleDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.timelineList {
+  display: flex;
+  flex-direction: column;
+}
+
+.timelineItem {
+  display: flex;
+  padding-bottom: $spacing-lg;
+  position: relative;
+
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 18rpx;
+    top: 48rpx;
+    bottom: 0;
+    width: 2rpx;
+    background: $color-border;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.timelineDot {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: $radius-round;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18rpx;
+  color: $color-text-white;
+  position: relative;
+  z-index: 1;
+}
+
+.timelineDotPlus {
+  background: $color-accent;
+}
+
+.timelineDotMinus {
+  background: $color-warning;
+}
+
+.timelineContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.timelineTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-sm;
+}
+
+.timelineReason {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  flex: 1;
+}
+
+.timelineAmount {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  flex-shrink: 0;
+}
+
+.timelineAmountPlus {
+  color: $color-accent;
+}
+
+.timelineAmountMinus {
+  color: $color-warning;
+}
+
+.timelineTime {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}

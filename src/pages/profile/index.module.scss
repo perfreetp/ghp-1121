@@ -1,0 +1,369 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  padding: $spacing-lg $page-padding $spacing-xl;
+  background: $color-bg-page;
+}
+
+.card {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.cardTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.editBtn {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.basicRow {
+  display: flex;
+  margin-bottom: $spacing-md;
+}
+
+.avatarWrapper {
+  position: relative;
+  margin-right: $spacing-lg;
+}
+
+.avatar {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: $radius-round;
+  border: 4rpx solid $color-primary-bg;
+}
+
+.verifiedBadge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  background: $color-secondary;
+  color: $color-text-white;
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid $color-bg-card;
+}
+
+.basicInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: $spacing-xs;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.userName {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.professionBadge {
+  padding: 4rpx $spacing-sm;
+  background: $color-primary-bg;
+  color: $color-primary;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.userMeta {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.anonymityTag {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: 4rpx $spacing-sm;
+  background: $color-bg-tag;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+}
+
+.infoItem {
+  padding: $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-md;
+}
+
+.infoLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xs;
+}
+
+.infoValue {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.timelineItem {
+  display: flex;
+  padding-bottom: $spacing-lg;
+  position: relative;
+
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 18rpx;
+    top: 48rpx;
+    bottom: 0;
+    width: 2rpx;
+    background: $color-border;
+  }
+}
+
+.timelineDot {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: $radius-round;
+  background: $color-primary;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18rpx;
+  color: $color-text-white;
+  border: 4rpx solid $color-primary-bg;
+  position: relative;
+  z-index: 1;
+}
+
+.timelineContent {
+  flex: 1;
+}
+
+.timelinePeriod {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-xs;
+}
+
+.timelineTitle {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-xs;
+}
+
+.timelineDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.addTimelineBtn {
+  margin-left: 72rpx;
+  padding: $spacing-md;
+  border: 2rpx dashed $color-border;
+  border-radius: $radius-md;
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $color-primary;
+  transition: all $transition-base;
+
+  &:active {
+    background: $color-primary-bg;
+  }
+}
+
+.skillsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.skillCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  background: $color-primary-bg;
+  border-radius: $radius-md;
+  min-width: 160rpx;
+}
+
+.skillIcon {
+  font-size: 40rpx;
+}
+
+.skillName {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.skillLevel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.addSkillBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-md $spacing-xl;
+  border: 2rpx dashed $color-border;
+  border-radius: $radius-md;
+  min-width: 160rpx;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.toolItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md 0;
+  border-bottom: 1rpx solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.toolInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.toolIcon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-md;
+  background: $color-bg-tag;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.toolDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.toolName {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.toolBrand {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.toolUsage {
+  font-size: $font-size-xs;
+  color: $color-accent;
+  background: rgba(134, 176, 73, 0.1);
+  padding: 4rpx $spacing-sm;
+  border-radius: $radius-xs;
+}
+
+.feeCard {
+  background: linear-gradient(135deg, rgba(201, 169, 97, 0.1) 0%, rgba(134, 176, 73, 0.05) 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.feeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.feeLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.feeValue {
+  font-size: $font-size-xl;
+  color: $color-secondary-dark;
+  font-weight: $font-weight-bold;
+}
+
+.feeUnit {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  font-weight: $font-weight-normal;
+}
+
+.serviceList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.serviceItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+}
+
+.serviceName {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.serviceFee {
+  font-size: $font-size-md;
+  color: $color-accent;
+  font-weight: $font-weight-semibold;
+}

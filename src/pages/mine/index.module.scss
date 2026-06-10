@@ -1,0 +1,239 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: $spacing-xl;
+}
+
+.profileHeader {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  margin: 0 (-$page-padding);
+  padding: $spacing-xl * 1.5 $page-padding $spacing-xl * 2;
+  position: relative;
+}
+
+.profileRow {
+  display: flex;
+  align-items: center;
+}
+
+.avatarWrapper {
+  position: relative;
+  margin-right: $spacing-lg;
+}
+
+.avatar {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: $radius-round;
+  border: 6rpx solid rgba(255, 255, 255, 0.3);
+  background: $color-bg-hover;
+}
+
+.verifiedBadge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: $radius-round;
+  background: $color-secondary;
+  color: $color-text-white;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid $color-primary;
+}
+
+.profileInfo {
+  flex: 1;
+}
+
+.userNameRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-xs;
+}
+
+.userName {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.professionBadge {
+  padding: 4rpx $spacing-md;
+  background: rgba(255, 255, 255, 0.2);
+  color: $color-text-white;
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+}
+
+.userDesc {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: $spacing-sm;
+}
+
+.userLocation {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.statsCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin: -$spacing-xl $spacing-xs $spacing-md;
+  box-shadow: $shadow-float;
+  display: flex;
+  justify-content: space-around;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.statValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.creditRow {
+  background: linear-gradient(135deg, rgba(201, 169, 97, 0.15) 0%, rgba(201, 169, 97, 0.05) 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.creditInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.creditIcon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-lg;
+  background: $color-secondary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+}
+
+.creditText {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.creditScore {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-secondary-dark;
+}
+
+.creditLabel {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.viewMore {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin: $spacing-lg 0 $spacing-md;
+  padding-left: $spacing-xs;
+}
+
+.menuGroup {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-md;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  border-bottom: 1rpx solid $color-divider;
+  transition: background $transition-fast;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:active {
+    background: $color-bg-hover;
+  }
+}
+
+.menuIcon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-md;
+  background: $color-primary-bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  margin-right: $spacing-md;
+}
+
+.menuContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.menuLabel {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.menuDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.menuArrow {
+  font-size: $font-size-md;
+  color: $color-text-disabled;
+}
+
+.menuBadge {
+  padding: 4rpx $spacing-sm;
+  background: $color-error;
+  color: $color-text-white;
+  border-radius: $radius-round;
+  font-size: 20rpx;
+  margin-right: $spacing-sm;
+}

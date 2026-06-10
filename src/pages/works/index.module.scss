@@ -1,0 +1,192 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  padding: $spacing-lg $page-padding 120rpx;
+  background: $color-bg-page;
+  position: relative;
+}
+
+.headerSection {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  box-shadow: 0 4rpx 20rpx rgba(107, 91, 149, 0.25);
+}
+
+.headerTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-lg;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.statValue {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-secondary-light;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.statDivider {
+  width: 1rpx;
+  height: 60rpx;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.worksGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+}
+
+.workCard {
+  width: calc(50% - #{$spacing-sm});
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: $shadow-card-hover;
+  }
+}
+
+.workCover {
+  width: 100%;
+  height: 260rpx;
+  background: $color-bg-hover;
+}
+
+.workContent {
+  padding: $spacing-md;
+}
+
+.workTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  line-height: $line-height-tight;
+  margin-bottom: $spacing-xs;
+  @include text-ellipsis-multi(1);
+}
+
+.workDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  line-height: $line-height-normal;
+  margin-bottom: $spacing-md;
+  height: 66rpx;
+  @include text-ellipsis-multi(2);
+}
+
+.workMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.workDate {
+  font-size: 20rpx;
+  color: $color-text-tertiary;
+}
+
+.workStats {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.statIcon {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  font-size: 20rpx;
+  color: $color-text-tertiary;
+}
+
+.statIconLiked {
+  color: $color-error;
+}
+
+.statIconViewed {
+  color: $color-primary;
+}
+
+.cardActions {
+  display: flex;
+  gap: $spacing-sm;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.actionBtn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-sm;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  transition: all $transition-fast;
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.actionEdit {
+  background: $color-primary-bg;
+  color: $color-primary;
+}
+
+.actionDelete {
+  background: #FDECEA;
+  color: $color-error;
+}
+
+.fabButton {
+  position: fixed;
+  right: $spacing-xl;
+  bottom: 60rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: $radius-round;
+  background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-light 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 24rpx rgba(201, 169, 97, 0.4);
+  z-index: 99;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.92);
+  }
+}
+
+.fabIcon {
+  font-size: 56rpx;
+  color: $color-text-white;
+  font-weight: $font-weight-light;
+  line-height: 1;
+}

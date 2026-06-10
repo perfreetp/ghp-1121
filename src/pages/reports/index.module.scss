@@ -1,0 +1,164 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  padding: $spacing-lg $page-padding;
+  background: $color-bg-page;
+  padding-bottom: $spacing-xl * 3;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.pageTitle {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.tabsRow {
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  overflow-x: auto;
+}
+
+.tabChip {
+  flex-shrink: 0;
+  padding: $spacing-sm $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  box-shadow: $shadow-card;
+}
+
+.tabActive {
+  background: $color-primary;
+  color: $color-text-white;
+}
+
+.reportList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.reportCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-md;
+}
+
+.targetInfo {
+  flex: 1;
+  margin-right: $spacing-md;
+}
+
+.targetTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  line-height: $line-height-tight;
+  @include text-ellipsis-multi(2);
+}
+
+.statusBadge {
+  flex-shrink: 0;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.statusPending {
+  background: rgba(245, 166, 35, 0.12);
+  color: $color-warning;
+}
+
+.statusProcessing {
+  background: rgba(33, 150, 243, 0.12);
+  color: $color-info;
+}
+
+.statusResolved {
+  background: rgba(76, 175, 80, 0.12);
+  color: $color-success;
+}
+
+.statusRejected {
+  background: rgba(231, 76, 60, 0.12);
+  color: $color-error;
+}
+
+.reasonBadge {
+  display: inline-block;
+  padding: $spacing-xs $spacing-md;
+  background: linear-gradient(135deg, rgba(201, 169, 97, 0.2) 0%, rgba(201, 169, 97, 0.1) 100%);
+  color: $color-secondary-dark;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-sm;
+}
+
+.reportDetail {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+  margin-bottom: $spacing-md;
+  @include text-ellipsis-multi(3);
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.createdAt {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.fabButton {
+  position: fixed;
+  right: $page-padding;
+  bottom: $spacing-xl * 2;
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: $radius-round;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  box-shadow: 0 8rpx 24rpx rgba(107, 91, 149, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-base;
+  z-index: 100;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.95);
+  }
+}
+
+.fabIcon {
+  font-size: 56rpx;
+  color: $color-text-white;
+  font-weight: $font-weight-light;
+  line-height: 1;
+}

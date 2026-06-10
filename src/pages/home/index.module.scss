@@ -1,0 +1,263 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #F3F0F8 0%, $color-bg-page 30%);
+  padding-bottom: 120rpx;
+}
+
+.headerSection {
+  padding: $spacing-lg $page-padding $spacing-xl;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  margin: 0 (-$page-padding) $spacing-lg;
+}
+
+.greetingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.greetingText {
+  color: $color-text-white;
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+}
+
+.subGreeting {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: $font-size-sm;
+  margin-top: $spacing-xs;
+}
+
+.verifiedBadge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-round;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.quickActions {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  backdrop-filter: blur(10px);
+}
+
+.quickItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+  color: $color-text-white;
+}
+
+.quickIcon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: $radius-lg;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+}
+
+.quickLabel {
+  font-size: $font-size-xs;
+}
+
+.tabContainer {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-xs;
+  margin-bottom: $spacing-md;
+  display: flex;
+  box-shadow: $shadow-card;
+}
+
+.tabItem {
+  flex: 1;
+  padding: $spacing-md 0;
+  text-align: center;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+}
+
+.tabActive {
+  background: $color-primary-bg;
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+}
+
+.postList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.postCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.postHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-round;
+  margin-right: $spacing-md;
+  background: $color-bg-hover;
+}
+
+.userInfo {
+  flex: 1;
+}
+
+.userNameRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+}
+
+.userName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.verifiedIcon {
+  font-size: $font-size-sm;
+  color: $color-secondary;
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.postTypeTag {
+  padding: 4rpx $spacing-sm;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+}
+
+.typeHelp {
+  background: $color-reward-light;
+  color: $color-reward;
+}
+
+.typeExperience {
+  background: rgba(134, 176, 73, 0.12);
+  color: $color-accent;
+}
+
+.typeDynamic {
+  background: $color-primary-bg;
+  color: $color-primary;
+}
+
+.postContent {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  line-height: $line-height-loose;
+  margin-bottom: $spacing-md;
+  white-space: pre-wrap;
+}
+
+.postImages {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.postImage {
+  width: 210rpx;
+  height: 210rpx;
+  border-radius: $radius-md;
+  background: $color-bg-hover;
+}
+
+.postTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.tagItem {
+  padding: 6rpx $spacing-md;
+  background: $color-bg-tag;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.postActions {
+  display: flex;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.actionItem {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+}
+
+.actionLiked {
+  color: $color-error;
+}
+
+.actionCollected {
+  color: $color-warning;
+}
+
+.fabButton {
+  position: fixed;
+  right: $page-padding;
+  bottom: 180rpx;
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: $radius-round;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(107, 91, 149, 0.4);
+  z-index: 100;
+}
+
+.fabText {
+  color: $color-text-white;
+  font-size: 56rpx;
+  font-weight: 300;
+}
