@@ -245,3 +245,20 @@
   align-items: center;
   justify-content: center;
 }
+
+.collectBtn {
+  padding: $spacing-xs $spacing-md;
+  border: 2rpx solid $color-divider;
+  color: $color-text-tertiary;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  background: $color-bg-card;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collectBtnActive {
+  color: #C9A961;
+  border-color: #C9A961;
+}

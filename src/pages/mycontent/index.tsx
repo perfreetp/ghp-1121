@@ -8,6 +8,8 @@ import { currentUser } from '@/data/users';
 import type { Question, CaseItem, Activity, DraftItem, WorkItem } from '@/types';
 
 type TabKey = 'published' | 'activities' | 'collected' | 'drafts' | 'works';
+type SortKey = 'time' | 'hot';
+type QaStatusFilter = 'all' | 'open' | 'resolved';
 
 const tabs: { key: TabKey; label: string }[] = [
   { key: 'works', label: '我的作品' },
@@ -19,6 +21,8 @@ const tabs: { key: TabKey; label: string }[] = [
 
 const MyContentPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('works');
+  const [sortKey, setSortKey] = useState<SortKey>('time');
+  const [qaStatusFilter, setQaStatusFilter] = useState<QaStatusFilter>('all');
 
   const works = useAppStore(s => s.works);
   const drafts = useAppStore(s => s.drafts);
@@ -37,10 +41,29 @@ const MyContentPage: React.FC = () => {
 
   const stats = [
     { num: works.length, label: '作品' },
-    { num: myPublishedQ.length + draftQas + draftPosts, label: '已发布/草稿' },
+    { num: drafts.length, label: '草稿' },
+    { num: myPublishedQ.length, label: '已发布' },
     { num: myRegisteredAct.length, label: '活动报名' },
     { num: myCollectedQ.length + myCollectedC.length, label: '收藏' },
   ];
+
+  const sortByTimeDesc = <T extends { createdAt?: string; updatedAt?: string }>(arr: T[]) =>
+    [...arr].sort((a, b) => (b.createdAt || b.updatedAt || '').localeCompare(a.createdAt || a.updatedAt || ''));
+
+  let publishedItems = myPublishedQ;
+  if (qaStatusFilter !== 'all') {
+    publishedItems = publishedItems.filter(q => q.status === qaStatusFilter);
+  }
+  publishedItems = sortKey === 'time' ? sortByTimeDesc(publishedItems) : [...publishedItems].sort((a, b) => b.views + b.answers - (a.views + a.answers));
+
+  const sortedCollectedQ = sortByTimeDesc(myCollectedQ);
+  const sortedCollectedC = sortByTimeDesc(myCollectedC);
+
+  const sortedWorks = sortKey === 'hot' ? [...works].sort((a, b) => b.likes + b.views - (a.likes + a.views)) : sortByTimeDesc(works);
+
+  const sortedDrafts = sortByTimeDesc(drafts);
+
+  const sortedActivities = sortByTimeDesc(myRegisteredAct);
 
   return (
     <View className={styles.pageContainer}>
@@ -56,6 +79,30 @@ const MyContentPage: React.FC = () => {
         ))}
       </ScrollView>
 
+      <View className={styles.filterRow}>
+        <View className={styles.filterLeft}>
+          <View className={classnames(styles.filterChip, sortKey === 'time' && styles.filterChipActive)} onClick={() => setSortKey('time')}>
+            <Text>🕐 最新</Text>
+          </View>
+          <View className={classnames(styles.filterChip, sortKey === 'hot' && styles.filterChipActive)} onClick={() => setSortKey('hot')}>
+            <Text>🔥 热度</Text>
+          </View>
+        </View>
+        {activeTab === 'published' && (
+          <View className={styles.filterRight}>
+            <View className={classnames(styles.filterChip, qaStatusFilter === 'all' && styles.filterChipActive)} onClick={() => setQaStatusFilter('all')}>
+              <Text>全部状态</Text>
+            </View>
+            <View className={classnames(styles.filterChip, qaStatusFilter === 'open' && styles.filterChipActive)} onClick={() => setQaStatusFilter('open')}>
+              <Text>待回答</Text>
+            </View>
+            <View className={classnames(styles.filterChip, qaStatusFilter === 'resolved' && styles.filterChipActive)} onClick={() => setQaStatusFilter('resolved')}>
+              <Text>已解决</Text>
+            </View>
+          </View>
+        )}
+      </View>
+
       <View className={styles.statsRow}>
         {stats.map((s, i) => (
           <View key={i} className={styles.statCard}>
@@ -66,14 +113,14 @@ const MyContentPage: React.FC = () => {
       </View>
 
       {activeTab === 'works' && (
-        works.length === 0 ? (
+        sortedWorks.length === 0 ? (
           <View className={styles.emptyWrap}>
             <Text className={styles.emptyIcon}>🎨</Text>
             <Text className={styles.emptyText}>暂无作品</Text>
           </View>
         ) : (
           <View className={styles.workGrid}>
-            {works.map(w => (
+            {sortedWorks.map(w => (
               <View key={w.id} className={styles.workCard}>
                 <Image className={styles.workCover} src={w.cover} mode="aspectFill" />
                 <View className={styles.workBody}>
@@ -90,15 +137,15 @@ const MyContentPage: React.FC = () => {
       )}
 
       {activeTab === 'drafts' && (
-        drafts.length === 0 ? (
+        sortedDrafts.length === 0 ? (
           <View className={styles.emptyWrap}>
             <Text className={styles.emptyIcon}>📝</Text>
             <Text className={styles.emptyText}>暂无草稿</Text>
           </View>
         ) : (
           <View className={styles.listContainer}>
-            {drafts.map(d => (
-              <View key={d.id} className={styles.draftCard} onClick={() => Taro.navigateTo({url: '/pages/drafts/index'})}>
+            {sortedDrafts.map(d => (
+              <View key={d.id} className={styles.draftCard} onClick={() => Taro.navigateTo({ url: '/pages/drafts/index' })}>
                 <View className={styles.draftHeader}>
                   <Text className={styles.draftTitle}>{d.title}</Text>
                   <View className={classnames(styles.typeBadge,
@@ -111,7 +158,7 @@ const MyContentPage: React.FC = () => {
                 <View className={styles.draftFooter}>
                   <Text className={styles.draftTime}>🕐 {d.updatedAt}</Text>
                   <View className={styles.draftActions}>
-                    <Text style={{fontSize:24, color:'#6B5B95'}}>继续编辑 ›</Text>
+                    <Text style={{ fontSize: 24, color: '#6B5B95' }}>继续编辑 ›</Text>
                   </View>
                 </View>
               </View>
@@ -121,16 +168,16 @@ const MyContentPage: React.FC = () => {
       )}
 
       {activeTab === 'published' && (
-        myPublishedQ.length === 0 ? (
+        publishedItems.length === 0 ? (
           <View className={styles.emptyWrap}>
             <Text className={styles.emptyIcon}>💬</Text>
             <Text className={styles.emptyText}>暂无发布内容</Text>
           </View>
         ) : (
           <View className={styles.listContainer}>
-            {myPublishedQ.map(q => (
+            {publishedItems.map(q => (
               <View key={q.id} className={styles.qaCard}
-                onClick={() => Taro.navigateTo({url: `/pages/qadetail/index?qId=${q.id}`})}>
+                onClick={() => Taro.navigateTo({ url: `/pages/qadetail/index?qId=${q.id}` })}>
                 <View className={styles.qTitleRow}>
                   <Text className={styles.qTitle}>{q.title}</Text>
                   <View className={classnames(styles.statusBadge,
@@ -140,7 +187,7 @@ const MyContentPage: React.FC = () => {
                 </View>
                 <Text className={styles.qContent}>{q.content}</Text>
                 <View className={styles.qFooter}>
-                  <Text style={{fontSize:22, color:'#8F8A82'}}>{q.createdAt}</Text>
+                  <Text style={{ fontSize: 22, color: '#8F8A82' }}>{q.createdAt}</Text>
                   <View className={styles.qStats}>
                     <Text>👁 {q.views}</Text>
                     <Text>💬 {q.answers}</Text>
@@ -154,18 +201,18 @@ const MyContentPage: React.FC = () => {
       )}
 
       {activeTab === 'activities' && (
-        myRegisteredAct.length === 0 ? (
+        sortedActivities.length === 0 ? (
           <View className={styles.emptyWrap}>
             <Text className={styles.emptyIcon}>🎪</Text>
             <Text className={styles.emptyText}>暂无报名活动</Text>
           </View>
         ) : (
           <View className={styles.listContainer}>
-            {myRegisteredAct.map(a => (
+            {sortedActivities.map(a => (
               <View key={a.id} className={styles.actCard}
-                onClick={() => Taro.navigateTo({url: `/pages/actdetail/index?actId=${a.id}`})}>
+                onClick={() => Taro.navigateTo({ url: `/pages/actdetail/index?actId=${a.id}` })}>
                 <View className={styles.actCover}>
-                  <Image style={{width:'100%', height:'100%'}} src={a.cover} mode="aspectFill" />
+                  <Image style={{ width: '100%', height: '100%' }} src={a.cover} mode="aspectFill" />
                   <View className={classnames(styles.typeBadge,
                     a.type === 'online' ? styles.typeOnline : styles.typeOffline)}>
                     <Text>{a.type === 'online' ? '📹 线上' : '📍 线下'}</Text>
@@ -182,37 +229,38 @@ const MyContentPage: React.FC = () => {
       )}
 
       {activeTab === 'collected' && (
-        (myCollectedQ.length + myCollectedC.length) === 0 ? (
+        (sortedCollectedQ.length + sortedCollectedC.length) === 0 ? (
           <View className={styles.emptyWrap}>
             <Text className={styles.emptyIcon}>⭐</Text>
             <Text className={styles.emptyText}>暂无收藏内容</Text>
           </View>
         ) : (
           <View>
-            {myCollectedQ.length > 0 && (
-              <View style={{marginBottom:32}}>
+            {sortedCollectedQ.length > 0 && (
+              <View style={{ marginBottom: 32 }}>
                 <View className={styles.sectionTitle}>
-                  <Text className={styles.sectionName}>收藏的问答（{myCollectedQ.length}）</Text>
+                  <Text className={styles.sectionName}>收藏的问答（{sortedCollectedQ.length}）</Text>
                 </View>
-                <View className={styles.listContainer} style={{marginTop:0}}>
-                  {myCollectedQ.slice(0,3).map(q => (
+                <View className={styles.listContainer} style={{ marginTop: 0 }}>
+                  {sortedCollectedQ.slice(0, 3).map(q => (
                     <View key={q.id} className={styles.qaCard}
-                      onClick={() => Taro.navigateTo({url:`/pages/qadetail/index?qId=${q.id}`})}>
-                      <Text className={styles.qTitle} style={{marginBottom:12}}>{q.title}</Text>
+                      onClick={() => Taro.navigateTo({ url: `/pages/qadetail/index?qId=${q.id}` })}>
+                      <Text className={styles.qTitle} style={{ marginBottom: 12 }}>{q.title}</Text>
                       <Text className={styles.qContent}>{q.content}</Text>
                     </View>
                   ))}
                 </View>
               </View>
             )}
-            {myCollectedC.length > 0 && (
+            {sortedCollectedC.length > 0 && (
               <View>
                 <View className={styles.sectionTitle}>
-                  <Text className={styles.sectionName}>收藏的案例（{myCollectedC.length}）</Text>
+                  <Text className={styles.sectionName}>收藏的案例（{sortedCollectedC.length}）</Text>
                 </View>
                 <View className={styles.workGrid}>
-                  {myCollectedC.map(c => (
-                    <View key={c.id} className={styles.caseCard}>
+                  {sortedCollectedC.map(c => (
+                    <View key={c.id} className={styles.caseCard}
+                      onClick={() => Taro.showToast({ title: '案例详情页开发中', icon: 'none' })}>
                       <Image className={styles.caseCover} src={c.cover} mode="aspectFill" />
                       <View className={styles.caseBody}>
                         <Text className={styles.caseTitle}>{c.title}</Text>

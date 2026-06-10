@@ -28,6 +28,7 @@ interface AppState {
   chatHistories: Record<string, ChatMessage[]>;
   setQuestions: (q: Question[]) => void;
   updateQuestion: (id: string, patch: Partial<Question>) => void;
+  addQuestion: (q: Question) => void;
   addAnswerToQuestion: (qId: string, answer: Answer) => void;
   setActivities: (a: Activity[]) => void;
   updateActivity: (id: string, patch: Partial<Activity>) => void;
@@ -36,13 +37,18 @@ interface AppState {
   appendToChat: (fromUserId: string, msg: ChatMessage) => void;
   setChatHistory: (fromUserId: string, msgs: ChatMessage[]) => void;
   setDrafts: (d: DraftItem[]) => void;
+  updateDraft: (id: string, patch: Partial<DraftItem>) => void;
   removeDraft: (id: string) => void;
   setWorks: (w: WorkItem[]) => void;
+  updateWork: (id: string, patch: Partial<WorkItem>) => void;
+  removeWork: (id: string) => void;
+  toggleWorkLike: (id: string) => void;
   setCases: (c: CaseItem[]) => void;
+  toggleCaseLike: (id: string) => void;
   toggleCollected: (type: 'question' | 'case' | 'post', id: string) => void;
 }
 
-export const useAppStore = create<AppState>((set, get) => ({
+export const useAppStore = create<AppState>((set) => ({
   questions: mockQuestions,
   activities: mockActivities,
   messages: mockMessages,
@@ -86,6 +92,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   updateQuestion: (id, patch) => set(state => ({
     questions: state.questions.map(q => q.id === id ? { ...q, ...patch } : q)
   })),
+  addQuestion: (q) => set(state => ({ questions: [q, ...state.questions] })),
   addAnswerToQuestion: (qId, answer) => set(state => ({
     questions: state.questions.map(q => {
       if (q.id !== qId) return q;
@@ -114,10 +121,28 @@ export const useAppStore = create<AppState>((set, get) => ({
   })),
 
   setDrafts: (d) => set({ drafts: d }),
+  updateDraft: (id, patch) => set(state => ({
+    drafts: state.drafts.map(d => d.id === id ? { ...d, ...patch } : d)
+  })),
   removeDraft: (id) => set(state => ({ drafts: state.drafts.filter(d => d.id !== id) })),
 
   setWorks: (w) => set({ works: w }),
+  updateWork: (id, patch) => set(state => ({
+    works: state.works.map(w => w.id === id ? { ...w, ...patch } : w)
+  })),
+  removeWork: (id) => set(state => ({ works: state.works.filter(w => w.id !== id) })),
+  toggleWorkLike: (id) => set(state => ({
+    works: state.works.map(w => w.id === id ? {
+      ...w, isLiked: !w.isLiked, likes: w.isLiked ? w.likes - 1 : w.likes + 1
+    } : w)
+  })),
+
   setCases: (c) => set({ cases: c }),
+  toggleCaseLike: (id) => set(state => ({
+    cases: state.cases.map(c => c.id === id ? {
+      ...c, isLiked: !c.isLiked, likes: c.isLiked ? c.likes - 1 : c.likes + 1
+    } : c)
+  })),
 
   toggleCollected: (type, id) => set(state => {
     if (type === 'question') {

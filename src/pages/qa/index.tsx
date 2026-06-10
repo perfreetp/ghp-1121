@@ -4,7 +4,6 @@ import Taro, { usePullDownRefresh } from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import type { Question, QaStatus, Answer } from '@/types';
-import { mockQuestions, mockAnswers } from '@/data/qa';
 import { mockUsers } from '@/data/users';
 import EmptyState from '@/components/EmptyState';
 import { useAppStore } from '@/store/appStore';
@@ -13,9 +12,9 @@ type FilterType = 'all' | QaStatus | 'reward' | 'mine';
 
 const QaPage: React.FC = () => {
   const questions = useAppStore(s => s.questions);
-  const updateQuestion = useAppStore(s => s.updateQuestion);
+  const addQuestion = useAppStore(s => s.addQuestion);
   const toggleCollected = useAppStore(s => s.toggleCollected);
-  const setQuestions = useAppStore(s => s.setQuestions);
+  const updateQuestion = useAppStore(s => s.updateQuestion);
   const [filter, setFilter] = useState<FilterType>('all');
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -95,7 +94,7 @@ const QaPage: React.FC = () => {
       answers: 0,
       isCollected: false
     };
-    setQuestions(prev => [newQuestion, ...prev]);
+    addQuestion(newQuestion);
     Taro.showToast({ title: '发布成功', icon: 'success' });
     cancelPublish();
   };

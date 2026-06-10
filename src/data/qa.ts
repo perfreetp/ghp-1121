@@ -25,6 +25,30 @@ export const mockAnswers: Answer[] = [
     likes: 23,
     isBest: false,
     isLiked: true
+  },
+  {
+    id: 'a003',
+    questionId: 'q004',
+    userId: mockUsers[3].id,
+    userInfo: mockUsers[3],
+    content: '面部修复我有10年经验，分享一下我的做法：1. 塑形材料方面，创伤严重的情况我推荐用医用石蜡打底，外层再用硅橡胶覆盖。石蜡定型快、易雕刻，硅橡胶质感更接近皮肤，两者结合效果最好；2. 肤色调配需要根据逝者生前照片，建议用专业的油彩调色盘，先调基础色，再慢慢叠加红、黄、黑微调，关键是少量多次；3. 品牌方面，国内的话"天寿"系列性价比不错，进口的话推荐美国的 Dodge 材料，购买渠道可以找当地的殡葬用品批发商或者直接联系厂家。最重要的是多练习，找一个模型反复试验不同材料的组合。',
+    images: [],
+    createdAt: '2026-06-05 18:20',
+    likes: 89,
+    isBest: true,
+    isLiked: false
+  },
+  {
+    id: 'a004',
+    questionId: 'q004',
+    userId: mockUsers[1].id,
+    userInfo: mockUsers[1],
+    content: '楼上说的很专业了，补充一点个人心得：对于车祸造成的骨骼错位，建议先用细铁丝做内固定，恢复正常的面部轮廓，然后再填充外部材料。另外家属如果能提供逝者生前的清晰照片，特别是微笑的正面照，对修复效果帮助非常大，要主动向家属索取。',
+    images: [],
+    createdAt: '2026-06-05 19:45',
+    likes: 41,
+    isBest: false,
+    isLiked: false
   }
 ];
 
@@ -90,6 +114,7 @@ export const mockQuestions: Question[] = [
     views: 678,
     answers: 15,
     bestAnswerId: 'a003',
+    answersList: mockAnswers.filter(a => a.questionId === 'q004'),
     isCollected: true
   },
   {

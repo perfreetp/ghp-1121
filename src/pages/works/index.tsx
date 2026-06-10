@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Image } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import type { WorkItem } from '@/types';
-import { mockWorks } from '@/data/works';
+import { useAppStore } from '@/store/appStore';
 import EmptyState from '@/components/EmptyState';
 
 const WorksPage: React.FC = () => {
-  const [works, setWorks] = useState<WorkItem[]>(mockWorks);
+  const works = useAppStore(s => s.works);
+  const removeWork = useAppStore(s => s.removeWork);
+  const toggleWorkLike = useAppStore(s => s.toggleWorkLike);
 
   const totalWorks = works.length;
   const totalLikes = works.reduce((sum, w) => sum + w.likes, 0);
@@ -20,15 +22,18 @@ const WorksPage: React.FC = () => {
     Taro.showToast({ title: '编辑功能开发中', icon: 'none' });
   };
 
-  const handleDelete = (work: WorkItem, e: any) => {
-    e.stopPropagation?.();
+  const handleLike = (id: string) => {
+    toggleWorkLike(id);
+  };
+
+  const handleDelete = (id: string) => {
     Taro.showModal({
       title: '确认删除',
-      content: `确定要删除「${work.title}」吗？此操作不可撤销。`,
+      content: '确定要删除这个作品吗？',
       confirmColor: '#E74C3C',
       success: (res) => {
         if (res.confirm) {
-          setWorks(prev => prev.filter(w => w.id !== work.id));
+          removeWork(id);
           Taro.showToast({ title: '删除成功', icon: 'success' });
         }
       }
@@ -88,8 +93,11 @@ const WorksPage: React.FC = () => {
                 <View className={styles.workMeta}>
                   <Text className={styles.workDate}>{work.createdAt}</Text>
                   <View className={styles.workStats}>
-                    <View className={classnames(styles.statIcon, styles.statIconLiked)}>
-                      <Text>♥</Text>
+                    <View
+                      className={classnames(styles.statIcon, work.isLiked && styles.statIconLiked)}
+                      onClick={(e) => { e.stopPropagation?.(); handleLike(work.id); }}
+                    >
+                      <Text>{work.isLiked ? '♥' : '♡'}</Text>
                       <Text>{work.likes}</Text>
                     </View>
                     <View className={classnames(styles.statIcon, styles.statIconViewed)}>
@@ -107,7 +115,7 @@ const WorksPage: React.FC = () => {
                   </View>
                   <View
                     className={classnames(styles.actionBtn, styles.actionDelete)}
-                    onClick={(e) => handleDelete(work, e)}
+                    onClick={(e) => { e.stopPropagation?.(); handleDelete(work.id); }}
                   >
                     <Text>🗑 删除</Text>
                   </View>

@@ -354,3 +354,35 @@
   font-size: $font-size-sm;
   color: $color-text-tertiary;
 }
+
+.filterRow {
+  margin: 0 $page-padding $spacing-lg;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filterLeft {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.filterRight {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.filterChip {
+  padding: $spacing-xs $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-button;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+}
+
+.filterChipActive {
+  background: $color-primary;
+  color: $color-text-white;
+}

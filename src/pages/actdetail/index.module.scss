@@ -415,3 +415,152 @@
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
 }
+
+.manageBtn {
+  height: $button-height-lg;
+  flex: 1;
+  background: linear-gradient(135deg, #F5A623 0%, #F7C948 100%);
+  color: $color-text-white;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $font-weight-semibold;
+  box-shadow: 0 8rpx 20rpx rgba(245, 166, 35, 0.25);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.manageActionBtn {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  padding: $spacing-xs $spacing-md;
+  background: $color-primary-bg;
+  border-radius: $radius-round;
+  font-weight: $font-weight-medium;
+}
+
+.moreTile {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-round;
+  background: $color-bg-hover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moreText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-secondary;
+}
+
+.modalMask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+}
+
+.modalContent {
+  width: 100%;
+  max-height: 85vh;
+  background: $color-bg-card;
+  border-radius: $radius-lg $radius-lg 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-lg;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.modalTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.modalSubtitle {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: $spacing-xs;
+}
+
+.modalClose {
+  font-size: $font-size-lg;
+  color: $color-text-tertiary;
+}
+
+.modalBody {
+  flex: 1;
+  padding: $spacing-lg;
+  overflow-y: auto;
+}
+
+.partRow {
+  display: flex;
+  gap: $spacing-md;
+  align-items: center;
+  padding: $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-sm;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: rgba($color-primary, 0.08);
+  }
+}
+
+.partAvatarBig {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-round;
+  flex-shrink: 0;
+}
+
+.partInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.partNameBig {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.partMeta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.cancelRegBtn {
+  padding: $spacing-xs $spacing-md;
+  border: 2rpx solid $color-error;
+  color: $color-error;
+  border-radius: $radius-button;
+  font-size: $font-size-xs;
+  flex-shrink: 0;
+}
+
+.emptyWrap {
+  padding: 80rpx 0;
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}

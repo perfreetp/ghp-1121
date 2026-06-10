@@ -4,14 +4,16 @@ import Taro, { usePullDownRefresh } from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import type { CaseItem, CaseType } from '@/types';
-import { mockCases } from '@/data/cases';
+import { useAppStore } from '@/store/appStore';
 import EmptyState from '@/components/EmptyState';
 
 type CategoryFilter = 'all' | CaseType;
 type SortType = 'latest' | 'popular' | 'liked';
 
 const CasesPage: React.FC = () => {
-  const [cases, setCases] = useState<CaseItem[]>(mockCases);
+  const cases = useAppStore(s => s.cases);
+  const toggleCaseLike = useAppStore(s => s.toggleCaseLike);
+  const toggleCollected = useAppStore(s => s.toggleCollected);
   const [category, setCategory] = useState<CategoryFilter>('all');
   const [sortBy, setSortBy] = useState<SortType>('latest');
 
@@ -55,27 +57,12 @@ const CasesPage: React.FC = () => {
 
   const filteredCases = getFilteredCases();
 
-  const handleLike = (caseId: string) => {
-    setCases(prev => prev.map(c => {
-      if (c.id === caseId) {
-        return {
-          ...c,
-          isLiked: !c.isLiked,
-          likes: c.isLiked ? c.likes - 1 : c.likes + 1
-        };
-      }
-      return c;
-    }));
+  const handleLike = (id: string) => {
+    toggleCaseLike(id);
   };
 
-  const handleCollect = (caseId: string) => {
-    setCases(prev => prev.map(c => {
-      if (c.id === caseId) {
-        return { ...c, isCollected: !c.isCollected };
-      }
-      return c;
-    }));
-    Taro.showToast({ title: '操作成功', icon: 'success' });
+  const handleCollect = (id: string) => {
+    toggleCollected('case', id);
   };
 
   const openCase = (c: CaseItem) => {

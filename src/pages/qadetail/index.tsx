@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, Textarea, ScrollView } from '@tarojs/components';
-import Taro, { useRouter, useDidShow } from '@tarojs/taro';
+import Taro, { useRouter } from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import { useAppStore } from '@/store/appStore';
@@ -14,9 +14,9 @@ const QaDetailPage: React.FC = () => {
   const question = useAppStore(s => s.questions.find(q => q.id === qId));
   const updateQuestion = useAppStore(s => s.updateQuestion);
   const addAnswerToQuestion = useAppStore(s => s.addAnswerToQuestion);
+  const toggleCollected = useAppStore(s => s.toggleCollected);
   
   const [newAnswer, setNewAnswer] = useState('');
-  const [expandedBest, setExpandedBest] = useState<string | null>(null);
 
   const getAnswers = (q: Question) => {
     if (q.answersList && q.answersList.length > 0) return q.answersList;
@@ -89,8 +89,16 @@ const QaDetailPage: React.FC = () => {
             <View className={styles.rewardBadge}>
               <Text>💰 悬赏 ¥{question.reward}</Text>
             </View>
-            <View className={classnames(styles.statusBadge, question.status === 'resolved' ? styles.statusResolved : styles.statusOpen)}>
-              <Text>{question.status === 'resolved' ? '✓ 已解决' : '● 待回答'}</Text>
+            <View style={{flexDirection:'row', gap: 16, alignItems:'center'}}>
+              <View 
+                className={classnames(styles.collectBtn, question.isCollected && styles.collectBtnActive)}
+                onClick={() => toggleCollected('question', question.id)}
+              >
+                <Text>{question.isCollected ? '★ 已收藏' : '☆ 收藏'}</Text>
+              </View>
+              <View className={classnames(styles.statusBadge, question.status === 'resolved' ? styles.statusResolved : styles.statusOpen)}>
+                <Text>{question.status === 'resolved' ? '✓ 已解决' : '● 待回答'}</Text>
+              </View>
             </View>
           </View>
           <Text className={styles.qTitle}>{question.title}</Text>

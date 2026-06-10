@@ -4,9 +4,13 @@ import Taro, { useRouter } from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import type { Activity, ActivityType } from '@/types';
-import { useAppStore, currentUser, mockUsers } from '@/store/appStore';
+import { useAppStore } from '@/store/appStore';
+import { mockUsers, currentUser } from '@/data/users';
 
-const participants = mockUsers.slice(0, 8);
+const mockParticipantsForActivity = (actId: string, num: number) => {
+  const seed = parseInt(actId.replace(/\D/g, '') || '1') % mockUsers.length;
+  return mockUsers.slice(seed, seed + num).filter(u => u.id !== 'u001');
+};
 
 const ActDetailPage: React.FC = () => {
   const router = useRouter();
@@ -17,6 +21,7 @@ const ActDetailPage: React.FC = () => {
   const activity = useMemo(() => activities.find(a => a.id === actId), [activities, actId]);
 
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showParticipantModal, setShowParticipantModal] = useState(false);
   const [formData, setFormData] = useState({
     type: 'online' as ActivityType,
     title: '',
@@ -39,9 +44,14 @@ const ActDetailPage: React.FC = () => {
     );
   }
 
-  const isOwner = activity.hostName === currentUser.nickname || activity.hostName === '林师';
+  const participants = mockParticipantsForActivity(activity.id, Math.min(activity.currentParticipants, mockUsers.length - 1));
+
+  const isOwner = activity?.hostName === currentUser.nickname || activity?.hostName === '林师';
   const isFull = activity.currentParticipants >= activity.maxParticipants;
   const progress = Math.round((activity.currentParticipants / activity.maxParticipants) * 100);
+
+  const displayedParticipants = participants.slice(0, 8);
+  const remainingCount = participants.length - displayedParticipants.length;
 
   const handleRegister = () => {
     if (isFull) {
@@ -72,15 +82,6 @@ const ActDetailPage: React.FC = () => {
     Taro.showToast({ title: '报名成功！', icon: 'success' });
   };
 
-  const openMap = () => {
-    if (!activity.location) return;
-    Taro.showToast({ title: `正在导航至：${activity.location}`, icon: 'none' });
-  };
-
-  const copyLink = () => {
-    Taro.setClipboardData({ data: 'https://meeting.xxx.com/join/' + activity.id });
-  };
-
   const openEditModal = () => {
     setFormData({
       type: activity.type,
@@ -104,42 +105,26 @@ const ActDetailPage: React.FC = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const saveEdit = () => {
-    if (!formData.title.trim()) {
-      Taro.showToast({ title: '请输入活动标题', icon: 'none' });
+  const handleSaveEdit = () => {
+    if (!formData.title.trim() || !formData.startTime.trim()) {
+      Taro.showToast({ title: '请填写完整信息', icon: 'none' });
       return;
     }
-    if (!formData.description.trim()) {
-      Taro.showToast({ title: '请输入活动详情', icon: 'none' });
-      return;
+    if (activity) {
+      updateActivity(activity.id, {
+        type: formData.type,
+        title: formData.title,
+        description: formData.description,
+        startTime: formData.startTime,
+        endTime: formData.endTime || undefined,
+        location: formData.type === 'offline' ? formData.location : undefined,
+        maxParticipants: parseInt(formData.maxParticipants) || 50,
+        fee: parseInt(formData.fee) || 0,
+        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean)
+      });
+      setShowEditModal(false);
+      Taro.showToast({ title: '已保存', icon: 'success' });
     }
-    if (!formData.startTime.trim()) {
-      Taro.showToast({ title: '请选择开始时间', icon: 'none' });
-      return;
-    }
-    if (!formData.maxParticipants.trim()) {
-      Taro.showToast({ title: '请输入名额上限', icon: 'none' });
-      return;
-    }
-    if (formData.type === 'offline' && !formData.location.trim()) {
-      Taro.showToast({ title: '请输入活动地点', icon: 'none' });
-      return;
-    }
-
-    updateActivity(activity.id, {
-      type: formData.type,
-      title: formData.title,
-      description: formData.description,
-      startTime: formData.startTime,
-      endTime: formData.endTime || undefined,
-      location: formData.type === 'offline' ? formData.location : undefined,
-      maxParticipants: parseInt(formData.maxParticipants) || 50,
-      fee: parseInt(formData.fee) || 0,
-      tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean)
-    });
-
-    Taro.showToast({ title: '保存成功！', icon: 'success' });
-    closeEditModal();
   };
 
   return (
@@ -205,20 +190,32 @@ const ActDetailPage: React.FC = () => {
       </View>
 
       <View className={styles.sectionCard}>
-        <View className={styles.sectionTitle}>
-          <Text>👥</Text>
-          <Text>活动参与者</Text>
+        <View className={styles.sectionHeader}>
+          <View className={styles.sectionTitle}>
+            <Text>👥</Text>
+            <Text>报名人 ({activity.currentParticipants}/{activity.maxParticipants})</Text>
+          </View>
+          {isOwner && (
+            <View className={styles.manageActionBtn} onClick={() => setShowParticipantModal(true)}>
+              <Text>管理报名 ({participants.length})</Text>
+            </View>
+          )}
         </View>
         <View className={styles.participantGrid}>
-          {participants.map(p => (
+          {displayedParticipants.map(p => (
             <View key={p.id} className={styles.participantItem}>
               <Image className={styles.partAvatar} src={p.avatar} mode="aspectFill" />
-              <Text className={styles.partName}>{p.nickname}</Text>
+              <Text className={styles.partName}>{p.anonymity === 'full-anonymous' ? '匿名同行' : p.nickname}</Text>
             </View>
           ))}
-        </View>
-        <View style={{ marginTop: '24rpx', textAlign: 'center' }}>
-          <Text style={{ fontSize: '24rpx', color: '#6B5B95' }}>查看全部 {activity.currentParticipants} 人</Text>
+          {remainingCount > 0 && (
+            <View className={styles.participantItem} onClick={() => setShowParticipantModal(true)}>
+              <View className={styles.moreTile}>
+                <Text className={styles.moreText}>+{remainingCount}</Text>
+              </View>
+              <Text className={styles.partName}>更多</Text>
+            </View>
+          )}
         </View>
       </View>
 
@@ -239,35 +236,43 @@ const ActDetailPage: React.FC = () => {
           </View>
 
           {activity.type === 'online' ? (
-            <View className={styles.infoItem}>
-              <View className={styles.infoIcon}>
-                <Text style={{ color: '#fff', fontSize: '24rpx' }}>🔗</Text>
-              </View>
-              <View className={styles.infoContent}>
-                <Text className={styles.infoLabel}>会议链接</Text>
-                <Text className={styles.infoValue}>https://meeting.xxx.com/join/{activity.id}</Text>
-                <View className={styles.mapBtnRow}>
-                  <View className={classnames(styles.mapBtn, styles.linkBtn)} onClick={copyLink}>
-                    <Text>📋 复制会议链接</Text>
-                  </View>
+            <>
+              <View className={styles.infoItem}>
+                <View className={styles.infoIcon}>
+                  <Text style={{ color: '#fff', fontSize: '24rpx' }}>🔗</Text>
+                </View>
+                <View className={styles.infoContent}>
+                  <Text className={styles.infoLabel}>线上会议链接</Text>
+                  <Text className={styles.infoValue} selectable>https://meeting.example.com/join/{activity?.id || '123456'}</Text>
                 </View>
               </View>
-            </View>
+              <View className={styles.mapBtnRow}>
+                <View className={`${styles.mapBtn} ${styles.linkBtn}`} onClick={() => {
+                  Taro.setClipboardData({ data: `https://meeting.example.com/join/${activity?.id || '123456'}` });
+                }}>
+                  <Text>📋 复制会议链接</Text>
+                </View>
+              </View>
+            </>
           ) : (
-            <View className={styles.infoItem}>
-              <View className={styles.infoIcon}>
-                <Text style={{ color: '#fff', fontSize: '24rpx' }}>📍</Text>
-              </View>
-              <View className={styles.infoContent}>
-                <Text className={styles.infoLabel}>活动地点</Text>
-                <Text className={styles.infoValue}>{activity.location}</Text>
-                <View className={styles.mapBtnRow}>
-                  <View className={styles.mapBtn} onClick={openMap}>
-                    <Text>🧭 查看地图导航</Text>
-                  </View>
+            <>
+              <View className={styles.infoItem}>
+                <View className={styles.infoIcon}>
+                  <Text style={{ color: '#fff', fontSize: '24rpx' }}>📍</Text>
+                </View>
+                <View className={styles.infoContent}>
+                  <Text className={styles.infoLabel}>线下活动地点</Text>
+                  <Text className={styles.infoValue}>{activity?.location}</Text>
                 </View>
               </View>
-            </View>
+              <View className={styles.mapBtnRow}>
+                <View className={styles.mapBtn} onClick={() => {
+                  Taro.showToast({ title: `正在打开地图导航至：${activity?.location}`, icon: 'none', duration: 2000 });
+                }}>
+                  <Text>🧭 地图导航</Text>
+                </View>
+              </View>
+            </>
           )}
 
           <View className={styles.infoItem}>
@@ -293,26 +298,32 @@ const ActDetailPage: React.FC = () => {
       </View>
 
       <View className={styles.bottomBar}>
-        {isOwner && (
-          <View className={styles.editBtn} onClick={openEditModal}>
-            <Text>✏️ 编辑活动</Text>
+        {isOwner ? (
+          <>
+            <View className={styles.manageBtn} onClick={() => setShowParticipantModal(true)}>
+              <Text>👥 报名管理</Text>
+            </View>
+            <View className={styles.editBtn} onClick={openEditModal}>
+              <Text>✎ 编辑活动</Text>
+            </View>
+          </>
+        ) : (
+          <View
+            className={classnames(
+              styles.registerBtn,
+              activity.isRegistered
+                ? styles.btnRegistered
+                : isFull
+                  ? styles.btnDisabled
+                  : ''
+            )}
+            onClick={handleRegister}
+          >
+            <Text>
+              {activity.isRegistered ? '取消报名' : isFull ? '名额已满' : '立即报名'}
+            </Text>
           </View>
         )}
-        <View
-          className={classnames(
-            styles.registerBtn,
-            activity.isRegistered
-              ? styles.btnRegistered
-              : isFull
-                ? styles.btnDisabled
-                : ''
-          )}
-          onClick={handleRegister}
-        >
-          <Text>
-            {activity.isRegistered ? '取消报名' : isFull ? '名额已满' : '立即报名'}
-          </Text>
-        </View>
       </View>
 
       {showEditModal && (
@@ -441,10 +452,65 @@ const ActDetailPage: React.FC = () => {
 
             </ScrollView>
             <View className={styles.editFooter}>
-              <View className={styles.saveBtn} onClick={saveEdit}>
+              <View className={styles.saveBtn} onClick={handleSaveEdit}>
                 <Text>保存修改</Text>
               </View>
             </View>
+          </View>
+        </View>
+      )}
+
+      {showParticipantModal && activity && (
+        <View className={styles.modalMask} onClick={() => setShowParticipantModal(false)}>
+          <View className={styles.modalContent} onClick={e => e.stopPropagation()}>
+            <View className={styles.modalHeader}>
+              <View>
+                <Text className={styles.modalTitle}>报名人管理</Text>
+                <Text className={styles.modalSubtitle}>共 {participants.length} 人已报名</Text>
+              </View>
+              <Text className={styles.modalClose} onClick={() => setShowParticipantModal(false)}>✕</Text>
+            </View>
+            <ScrollView scrollY className={styles.modalBody}>
+              {participants.length === 0 ? (
+                <View className={styles.emptyWrap}>
+                  <Text>暂时没人报名～</Text>
+                </View>
+              ) : (
+                participants.map(p => (
+                  <View key={p.id} className={styles.partRow}>
+                    <Image className={styles.partAvatarBig} src={p.avatar} mode="aspectFill" />
+                    <View className={styles.partInfo}>
+                      <Text className={styles.partNameBig}>
+                        {p.anonymity === 'full-anonymous' ? '匿名同行' : p.nickname}
+                      </Text>
+                      <Text className={styles.partMeta}>
+                        {p.profession} · {p.city || ''}
+                      </Text>
+                    </View>
+                    {isOwner && (
+                      <View
+                        className={styles.cancelRegBtn}
+                        onClick={() => {
+                          Taro.showModal({
+                            title: '取消报名',
+                            content: `确认取消「${p.anonymity === 'full-anonymous' ? '匿名同行' : p.nickname}」的报名资格？`,
+                            confirmColor: '#E74C3C',
+                            success: (res) => {
+                              if (res.confirm && activity) {
+                                updateActivity(activity.id, { currentParticipants: Math.max(0, activity.currentParticipants - 1) });
+                                Taro.showToast({ title: '已取消', icon: 'success' });
+                              }
+                            }
+                          });
+                        }}
+                      >
+                        <Text>取消资格</Text>
+                      </View>
+                    )}
+                  </View>
+                ))
+              )}
+            </ScrollView>
           </View>
         </View>
       )}

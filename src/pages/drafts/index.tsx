@@ -4,14 +4,16 @@ import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import type { DraftItem } from '@/types';
-import { mockDrafts } from '@/data/drafts';
+import { useAppStore } from '@/store/appStore';
 import EmptyState from '@/components/EmptyState';
 
 type TabType = 'all' | 'post' | 'qa' | 'case';
 
 const DraftsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('all');
-  const [drafts, setDrafts] = useState<DraftItem[]>(mockDrafts);
+  const drafts = useAppStore(s => s.drafts);
+  const updateDraft = useAppStore(s => s.updateDraft);
+  const removeDraft = useAppStore(s => s.removeDraft);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingDraft, setEditingDraft] = useState<DraftItem | null>(null);
   const [editTitle, setEditTitle] = useState('');
@@ -75,7 +77,7 @@ const DraftsPage: React.FC = () => {
       confirmColor: '#E74C3C',
       success: (res) => {
         if (res.confirm) {
-          setDrafts(prev => prev.filter(d => d.id !== draftId));
+          removeDraft(draftId);
           Taro.showToast({ title: '删除成功', icon: 'success' });
         }
       }
@@ -89,18 +91,12 @@ const DraftsPage: React.FC = () => {
     }
     if (!editingDraft) return;
 
-    setDrafts(prev => prev.map(d => {
-      if (d.id === editingDraft.id) {
-        return {
-          ...d,
-          title: editTitle.trim(),
-          content: editContent,
-          tags: editTags.split(',').map(t => t.trim()).filter(t => t),
-          updatedAt: formatDateTime()
-        };
-      }
-      return d;
-    }));
+    updateDraft(editingDraft.id, {
+      title: editTitle.trim(),
+      content: editContent,
+      tags: editTags.split(',').map(t => t.trim()).filter(t => t),
+      updatedAt: formatDateTime()
+    });
     Taro.showToast({ title: '已保存', icon: 'success' });
     closeEditModal();
   };
@@ -116,7 +112,7 @@ const DraftsPage: React.FC = () => {
     }
     if (!editingDraft) return;
 
-    setDrafts(prev => prev.filter(d => d.id !== editingDraft.id));
+    removeDraft(editingDraft.id);
     Taro.showToast({ title: '发布成功！', icon: 'success' });
     closeEditModal();
   };

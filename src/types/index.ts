@@ -132,6 +132,7 @@ export interface WorkItem {
   createdAt: string;
   likes: number;
   views: number;
+  isLiked: boolean;
 }
 
 export interface DraftItem {

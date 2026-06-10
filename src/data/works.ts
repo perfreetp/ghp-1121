@@ -13,7 +13,8 @@ export const mockWorks: WorkItem[] = [
     ],
     createdAt: '2026-06-08',
     likes: 68,
-    views: 425
+    views: 425,
+    isLiked: false
   },
   {
     id: 'w002',
@@ -25,7 +26,8 @@ export const mockWorks: WorkItem[] = [
     ],
     createdAt: '2026-06-03',
     likes: 156,
-    views: 1208
+    views: 1208,
+    isLiked: true
   },
   {
     id: 'w003',
@@ -38,7 +40,8 @@ export const mockWorks: WorkItem[] = [
     ],
     createdAt: '2026-05-28',
     likes: 92,
-    views: 687
+    views: 687,
+    isLiked: false
   },
   {
     id: 'w004',
@@ -51,7 +54,8 @@ export const mockWorks: WorkItem[] = [
     ],
     createdAt: '2026-05-22',
     likes: 73,
-    views: 541
+    views: 541,
+    isLiked: false
   },
   {
     id: 'w005',
@@ -64,7 +68,8 @@ export const mockWorks: WorkItem[] = [
     ],
     createdAt: '2026-05-18',
     likes: 54,
-    views: 389
+    views: 389,
+    isLiked: true
   },
   {
     id: 'w006',
@@ -76,6 +81,7 @@ export const mockWorks: WorkItem[] = [
     ],
     createdAt: '2026-05-12',
     likes: 128,
-    views: 892
+    views: 892,
+    isLiked: false
   }
 ];
