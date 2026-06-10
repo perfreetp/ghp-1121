@@ -25,13 +25,14 @@ const MessagesPage: React.FC = () => {
   };
 
   const handleMessageClick = (msg: Message) => {
-    console.log('[Messages] Open chat with:', msg.fromUserId);
     if (msg.unread > 0) {
       setMessages(prev => prev.map(m =>
         m.id === msg.id ? { ...m, unread: 0 } : m
       ));
     }
-    Taro.showToast({ title: '聊天页开发中', icon: 'none' });
+    Taro.navigateTo({
+      url: `/pages/chat/index?userName=${encodeURIComponent(msg.fromUserName)}&avatar=${encodeURIComponent(msg.fromUserAvatar)}&profession=${encodeURIComponent('同行')}`
+    });
   };
 
   const handleMarkRead = (msg: Message, e: any) => {
@@ -52,6 +53,20 @@ const MessagesPage: React.FC = () => {
         if (res.confirm) {
           setMessages(prev => prev.filter(m => m.id !== msg.id));
           Taro.showToast({ title: '删除成功', icon: 'success' });
+        }
+      }
+    });
+  };
+
+  const handleSwipeDelete = (msg: Message) => {
+    Taro.showModal({
+      title: '确认删除',
+      content: `确定要删除与「${msg.fromUserName}」的对话吗？`,
+      confirmColor: '#E74C3C',
+      success: (res) => {
+        if (res.confirm) {
+          setMessages(prev => prev.filter(m => m.id !== msg.id));
+          Taro.showToast({ title: '已删除对话', icon: 'success' });
         }
       }
     });
@@ -125,7 +140,12 @@ const MessagesPage: React.FC = () => {
                 </Text>
               </View>
 
-              <Text className={styles.swipeHint}>›</Text>
+              <View className={styles.actionDeleteBtn} onClick={(e) => {
+                e.stopPropagation?.();
+                handleDelete(msg, e);
+              }}>
+                <Text>删除</Text>
+              </View>
             </View>
           ))}
         </View>

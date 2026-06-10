@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, ScrollView } from '@tarojs/components';
+import { View, Text, Image, ScrollView, Input, Textarea } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
@@ -11,6 +11,12 @@ type TabType = 'all' | 'post' | 'qa' | 'case';
 
 const DraftsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('all');
+  const [drafts, setDrafts] = useState<DraftItem[]>(mockDrafts);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingDraft, setEditingDraft] = useState<DraftItem | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
+  const [editTags, setEditTags] = useState('');
 
   const tabs: { key: TabType; label: string }[] = [
     { key: 'all', label: '全部' },
@@ -25,33 +31,94 @@ const DraftsPage: React.FC = () => {
     case: { label: '案例', className: styles.typeCase }
   };
 
-  const filteredDrafts = mockDrafts.filter(draft => {
+  const formatDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
+
+  const openEditModal = (draft: DraftItem) => {
+    setEditingDraft(draft);
+    setEditTitle(draft.title);
+    setEditContent(draft.content);
+    setEditTags(draft.tags.join(','));
+    setShowEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setEditingDraft(null);
+  };
+
+  const filteredDrafts = drafts.filter(draft => {
     if (activeTab === 'all') return true;
     return draft.type === activeTab;
   });
 
   const handleEdit = (draft: DraftItem) => {
-    console.log('[Drafts] Edit draft:', draft.id);
-    Taro.showToast({ title: '编辑功能开发中', icon: 'none' });
+    openEditModal(draft);
   };
 
   const handlePublish = (draft: DraftItem) => {
-    console.log('[Drafts] Publish draft:', draft.id);
-    Taro.showToast({ title: '发布功能开发中', icon: 'none' });
+    openEditModal(draft);
+    Taro.showToast({ title: '请先确认内容后发布', icon: 'none' });
   };
 
-  const handleDelete = (draft: DraftItem) => {
+  const handleDelete = (draftId: string) => {
     Taro.showModal({
       title: '确认删除',
       content: '删除后草稿无法恢复，确定要删除吗？',
       confirmColor: '#E74C3C',
       success: (res) => {
         if (res.confirm) {
-          console.log('[Drafts] Delete draft:', draft.id);
+          setDrafts(prev => prev.filter(d => d.id !== draftId));
           Taro.showToast({ title: '删除成功', icon: 'success' });
         }
       }
     });
+  };
+
+  const handleSaveEdit = () => {
+    if (!editTitle.trim()) {
+      Taro.showToast({ title: '标题不能为空', icon: 'none' });
+      return;
+    }
+    if (!editingDraft) return;
+
+    setDrafts(prev => prev.map(d => {
+      if (d.id === editingDraft.id) {
+        return {
+          ...d,
+          title: editTitle.trim(),
+          content: editContent,
+          tags: editTags.split(',').map(t => t.trim()).filter(t => t),
+          updatedAt: formatDateTime()
+        };
+      }
+      return d;
+    }));
+    Taro.showToast({ title: '已保存', icon: 'success' });
+    closeEditModal();
+  };
+
+  const handleConfirmPublish = () => {
+    if (!editTitle.trim()) {
+      Taro.showToast({ title: '标题不能为空', icon: 'none' });
+      return;
+    }
+    if (!editContent.trim()) {
+      Taro.showToast({ title: '内容不能为空', icon: 'none' });
+      return;
+    }
+    if (!editingDraft) return;
+
+    setDrafts(prev => prev.filter(d => d.id !== editingDraft.id));
+    Taro.showToast({ title: '发布成功！', icon: 'success' });
+    closeEditModal();
   };
 
   return (
@@ -127,7 +194,7 @@ const DraftsPage: React.FC = () => {
                   </View>
                   <View
                     className={classnames(styles.actionBtn, styles.btnDelete)}
-                    onClick={() => handleDelete(draft)}
+                    onClick={() => handleDelete(draft.id)}
                   >
                     <Text>删除</Text>
                   </View>
@@ -135,6 +202,54 @@ const DraftsPage: React.FC = () => {
               </View>
             </View>
           ))}
+        </View>
+      )}
+
+      {showEditModal && editingDraft && (
+        <View className={styles.modalMask} onClick={closeEditModal}>
+          <View className={styles.modalContent} onClick={e=>e.stopPropagation()}>
+            <View className={styles.modalHeader}>
+              <View className={styles.modalLeft}>
+                <Text className={styles.modalTitle}>编辑草稿</Text>
+                <View className={`${styles.typeBadge} ${typeMap[editingDraft.type].className}`}>
+                  <Text>{typeMap[editingDraft.type].label}</Text>
+                </View>
+              </View>
+              <Text className={styles.modalClose} onClick={closeEditModal}>✕</Text>
+            </View>
+            <ScrollView scrollY className={styles.modalBody}>
+              <View className={styles.formItem}>
+                <Text className={styles.formLabel}>标题 *</Text>
+                <Input className={styles.formInput} placeholder="请输入标题" value={editTitle} onInput={e=>setEditTitle(e.detail.value)} maxLength={100}/>
+              </View>
+              <View className={styles.formItem}>
+                <Text className={styles.formLabel}>内容 *</Text>
+                <Textarea className={styles.formTextarea} placeholder="请输入内容..." value={editContent} onInput={e=>setEditContent(e.detail.value)} maxLength={2000}/>
+              </View>
+              {editingDraft.images.length > 0 && (
+                <View className={styles.formItem}>
+                  <Text className={styles.formLabel}>已上传图片 ({editingDraft.images.length})</Text>
+                  <View className={styles.imagePreviewRow}>
+                    {editingDraft.images.map((img, i) => (
+                      <Image key={i} className={styles.previewImage} src={img} mode="aspectFill"/>
+                    ))}
+                  </View>
+                </View>
+              )}
+              <View className={styles.formItem}>
+                <Text className={styles.formLabel}>标签（逗号分隔）</Text>
+                <Input className={styles.formInput} placeholder="如：经验分享,新人指南,火化技巧" value={editTags} onInput={e=>setEditTags(e.detail.value)}/>
+              </View>
+            </ScrollView>
+            <View className={styles.modalFooter}>
+              <View className={styles.saveBtn} onClick={handleSaveEdit}>
+                <Text>保存草稿</Text>
+              </View>
+              <View className={styles.publishBtn} onClick={handleConfirmPublish}>
+                <Text>确认发布</Text>
+              </View>
+            </View>
+          </View>
         </View>
       )}
     </View>

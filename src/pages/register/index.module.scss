@@ -380,3 +380,68 @@
   line-height: $line-height-loose;
   margin-bottom: $spacing-xs;
 }
+
+.uploadedList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.uploadedImageWrap {
+  position: relative;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.uploadedImage {
+  width: 100%;
+  height: 100%;
+}
+
+.removeBtn {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: rgba(231, 76, 60, 0.9);
+  color: $color-text-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.addMoreCard {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: $radius-md;
+  border: 2rpx dashed $color-border;
+  background: $color-bg-hover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+}
+
+.addMoreIcon {
+  font-size: 48rpx;
+  opacity: 0.5;
+}
+
+.addMoreText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.uploadedCount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: $spacing-sm;
+}

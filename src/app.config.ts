@@ -13,7 +13,8 @@ export default defineAppConfig({
     'pages/drafts/index',
     'pages/reports/index',
     'pages/blacklist/index',
-    'pages/credit/index'
+    'pages/credit/index',
+    'pages/chat/index'
   ],
   window: {
     backgroundTextStyle: 'light',

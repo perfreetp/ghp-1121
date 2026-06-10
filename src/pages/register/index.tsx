@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Input, Textarea, ScrollView } from '@tarojs/components';
+import { View, Text, Input, Textarea, ScrollView, Image } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
@@ -15,6 +15,7 @@ const RegisterPage: React.FC = () => {
   const [idNumber, setIdNumber] = useState('');
   const [bio, setBio] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   const professionOptions = [
     { key: 'pet-funerary' as UserRole, icon: '🐾', label: '宠物殡葬师', desc: '宠物善终服务' },
@@ -41,7 +42,7 @@ const RegisterPage: React.FC = () => {
   ];
 
   const canNextStep1 = profession !== '';
-  const canNextStep2 = realName !== '' && idNumber !== '' && city !== '';
+  const canNextStep2 = realName !== '' && idNumber !== '' && city !== '' && uploadedImages.length > 0;
   const canSubmit = agreed;
 
   const nextStep = () => {
@@ -68,7 +69,28 @@ const RegisterPage: React.FC = () => {
   };
 
   const handleUpload = () => {
-    Taro.showToast({ title: '上传功能开发中', icon: 'none' });
+    Taro.chooseImage({
+      count: 3 - uploadedImages.length,
+      sizeType: ['compressed'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        setUploadedImages([...uploadedImages, ...res.tempFilePaths]);
+      }
+    });
+  };
+
+  const removeImage = (index: number) => {
+    Taro.showModal({
+      title: '提示',
+      content: '确定要删除这张图片吗？',
+      success: (res) => {
+        if (res.confirm) {
+          const newImages = [...uploadedImages];
+          newImages.splice(index, 1);
+          setUploadedImages(newImages);
+        }
+      }
+    });
   };
 
   return (
@@ -188,18 +210,46 @@ const RegisterPage: React.FC = () => {
           <View className={styles.card}>
             <Text className={styles.cardTitle}>上传职业证明材料</Text>
             <Text className={styles.cardDesc}>以下材料任选其一上传，将加快审核速度</Text>
-            <View className={styles.uploadArea} onClick={handleUpload}>
-              <Text className={styles.uploadIcon}>📎</Text>
-              <Text className={styles.uploadText}>点击上传证明材料</Text>
-              <Text className={styles.uploadHint}>
-                支持：职业资格证书 / 工作证明 / 营业执照 / 培训结业证
-                {'\n'}格式：JPG/PNG，单张不超过10MB
-              </Text>
-            </View>
+            {uploadedImages.length === 0 ? (
+              <View className={styles.uploadArea} onClick={handleUpload}>
+                <Text className={styles.uploadIcon}>📎</Text>
+                <Text className={styles.uploadText}>点击上传证明材料</Text>
+                <Text className={styles.uploadHint}>
+                  支持：职业资格证书 / 工作证明 / 营业执照 / 培训结业证
+                  {'\n'}格式：JPG/PNG，单张不超过10MB
+                </Text>
+              </View>
+            ) : (
+              <>
+                <View className={styles.uploadedList}>
+                  {uploadedImages.map((img, index) => (
+                    <View key={index} className={styles.uploadedImageWrap}>
+                      <Image src={img} mode="aspectFill" className={styles.uploadedImage} />
+                      <View className={styles.removeBtn} onClick={() => removeImage(index)}>
+                        <Text>×</Text>
+                      </View>
+                    </View>
+                  ))}
+                  {uploadedImages.length < 3 && (
+                    <View className={styles.addMoreCard} onClick={handleUpload}>
+                      <Text className={styles.addMoreIcon}>+</Text>
+                      <Text className={styles.addMoreText}>添加图片</Text>
+                    </View>
+                  )}
+                </View>
+                <Text className={styles.uploadedCount}>已上传 {uploadedImages.length}/3 张证明材料</Text>
+              </>
+            )}
           </View>
 
           <View className={styles.btnPrimary} onClick={nextStep}>
-            <Text>{canNextStep2 ? '下一步：确认并提交' : '请填写必填项'}</Text>
+            <Text>
+              {canNextStep2
+                ? '下一步：确认并提交'
+                : !canNextStep2 && uploadedImages.length === 0
+                ? '请填写必填项并上传证明材料'
+                : '请填写必填项'}
+            </Text>
           </View>
           <View className={styles.btnSecondary} onClick={prevStep}>
             <Text>返回上一步</Text>

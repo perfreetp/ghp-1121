@@ -142,6 +142,17 @@
   flex-shrink: 0;
 }
 
+.actionDeleteBtn {
+  margin-left: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: rgba(231, 76, 60, 0.1);
+  color: $color-error;
+  border-radius: $radius-button;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  flex-shrink: 0;
+}
+
 .swipeActions {
   position: absolute;
   top: 0;
