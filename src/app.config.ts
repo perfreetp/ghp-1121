@@ -14,7 +14,10 @@ export default defineAppConfig({
     'pages/reports/index',
     'pages/blacklist/index',
     'pages/credit/index',
-    'pages/chat/index'
+    'pages/chat/index',
+    'pages/qadetail/index',
+    'pages/actdetail/index',
+    'pages/mycontent/index'
   ],
   window: {
     backgroundTextStyle: 'light',

@@ -163,12 +163,24 @@
   color: $color-primary;
 }
 
+.sectionTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: $spacing-lg 0 $spacing-md;
+  padding-left: $spacing-xs;
+}
+
 .sectionTitle {
   font-size: $font-size-md;
   font-weight: $font-weight-semibold;
   color: $color-text-primary;
-  margin: $spacing-lg 0 $spacing-md;
-  padding-left: $spacing-xs;
+}
+
+.viewAll {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  padding-right: $spacing-xs;
 }
 
 .menuGroup {

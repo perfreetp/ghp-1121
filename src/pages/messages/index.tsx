@@ -4,11 +4,12 @@ import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import type { Message } from '@/types';
-import { mockMessages } from '@/data/messages';
+import { useAppStore } from '@/store/appStore';
 import EmptyState from '@/components/EmptyState';
 
 const MessagesPage: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const messages = useAppStore(s => s.messages);
+  const setMessages = useAppStore(s => s.setMessages);
   const [searchText, setSearchText] = useState('');
 
   const filteredMessages = useMemo(() => {
@@ -25,48 +26,20 @@ const MessagesPage: React.FC = () => {
   };
 
   const handleMessageClick = (msg: Message) => {
-    if (msg.unread > 0) {
-      setMessages(prev => prev.map(m =>
-        m.id === msg.id ? { ...m, unread: 0 } : m
-      ));
-    }
     Taro.navigateTo({
-      url: `/pages/chat/index?userName=${encodeURIComponent(msg.fromUserName)}&avatar=${encodeURIComponent(msg.fromUserAvatar)}&profession=${encodeURIComponent('同行')}`
+      url: `/pages/chat/index?fromUserId=${msg.fromUserId}&userName=${encodeURIComponent(msg.fromUserName)}&avatar=${encodeURIComponent(msg.fromUserAvatar)}&profession=${encodeURIComponent('同行')}`
     });
   };
 
-  const handleMarkRead = (msg: Message, e: any) => {
-    e.stopPropagation?.();
-    setMessages(prev => prev.map(m =>
-      m.id === msg.id ? { ...m, unread: 0 } : m
-    ));
-    Taro.showToast({ title: '已标为已读', icon: 'success' });
-  };
-
-  const handleDelete = (msg: Message, e: any) => {
-    e.stopPropagation?.();
+  const handleDelete = (msg: Message) => {
     Taro.showModal({
       title: '确认删除',
       content: `确定要删除与「${msg.fromUserName}」的对话吗？`,
       confirmColor: '#E74C3C',
       success: (res) => {
         if (res.confirm) {
-          setMessages(prev => prev.filter(m => m.id !== msg.id));
+          setMessages(messages.filter(m => m.id !== msg.id));
           Taro.showToast({ title: '删除成功', icon: 'success' });
-        }
-      }
-    });
-  };
-
-  const handleSwipeDelete = (msg: Message) => {
-    Taro.showModal({
-      title: '确认删除',
-      content: `确定要删除与「${msg.fromUserName}」的对话吗？`,
-      confirmColor: '#E74C3C',
-      success: (res) => {
-        if (res.confirm) {
-          setMessages(prev => prev.filter(m => m.id !== msg.id));
-          Taro.showToast({ title: '已删除对话', icon: 'success' });
         }
       }
     });
@@ -142,7 +115,7 @@ const MessagesPage: React.FC = () => {
 
               <View className={styles.actionDeleteBtn} onClick={(e) => {
                 e.stopPropagation?.();
-                handleDelete(msg, e);
+                handleDelete(msg);
               }}>
                 <Text>删除</Text>
               </View>

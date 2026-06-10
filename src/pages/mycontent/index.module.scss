@@ -1,0 +1,356 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: $spacing-lg;
+}
+
+.tabBar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: $color-bg-card;
+  display: flex;
+  overflow-x: auto;
+  padding: $spacing-md;
+  gap: $spacing-lg;
+  border-bottom: 1rpx solid $color-divider;
+  margin-bottom: $spacing-lg;
+}
+
+.tabChip {
+  flex-shrink: 0;
+  padding: $spacing-md $spacing-lg;
+  background: $color-bg-hover;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-right: $spacing-md;
+  transition: all $transition-base;
+}
+
+.tabActive {
+  background: $color-primary;
+  color: $color-text-white;
+}
+
+.statsRow {
+  margin: 0 $page-padding $spacing-lg;
+  display: flex;
+  gap: $spacing-md;
+}
+
+.statCard {
+  flex: 1;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statNum {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.sectionTitle {
+  margin: 0 $page-padding $spacing-md;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+}
+
+.sectionMore {
+  font-size: $font-size-xs;
+  color: $color-primary;
+}
+
+.listContainer {
+  margin: 0 $page-padding $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.workGrid {
+  margin: 0 $page-padding $spacing-lg;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+}
+
+.workCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.workCover {
+  width: 100%;
+  height: 240rpx;
+}
+
+.workBody {
+  padding: $spacing-md;
+}
+
+.workTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+  margin-bottom: $spacing-xs;
+  @include text-ellipsis;
+}
+
+.workStats {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: flex;
+  justify-content: space-between;
+}
+
+.qaCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.qTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-sm;
+}
+
+.qTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  flex: 1;
+  margin-right: $spacing-md;
+  @include text-ellipsis;
+}
+
+.statusBadge {
+  padding: 4rpx $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: 20rpx;
+  flex-shrink: 0;
+}
+
+.statusResolved {
+  background: rgba(134, 176, 73, 0.15);
+  color: $color-accent;
+}
+
+.statusOpen {
+  background: rgba(233, 30, 99, 0.12);
+  color: $color-reward;
+}
+
+.qContent {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+  margin-bottom: $spacing-md;
+  @include text-ellipsis-multi(2);
+}
+
+.qFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.qStats {
+  display: flex;
+  gap: $spacing-md;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.actCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.actCover {
+  width: 100%;
+  height: 200rpx;
+  position: relative;
+}
+
+.typeBadge {
+  position: absolute;
+  padding: 6rpx $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: 20rpx;
+  color: $color-text-white;
+  top: $spacing-sm;
+  left: $spacing-sm;
+}
+
+.feeBadge {
+  position: absolute;
+  padding: 6rpx $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: 20rpx;
+  color: $color-text-white;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  background: $color-reward;
+}
+
+.typeOnline {
+  background: $color-primary;
+}
+
+.typeOffline {
+  background: $color-secondary;
+}
+
+.actBody {
+  padding: $spacing-md;
+}
+
+.actTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  margin-bottom: $spacing-sm;
+  @include text-ellipsis;
+}
+
+.actMeta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-md;
+}
+
+.draftCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.draftHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.draftTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  flex: 1;
+  margin-right: $spacing-md;
+}
+
+.typePost {
+  background: $color-primary;
+  position: static;
+}
+
+.typeQa {
+  background: $color-secondary;
+  position: static;
+}
+
+.typeCase {
+  background: $color-accent;
+  position: static;
+}
+
+.draftContent {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-md;
+  @include text-ellipsis-multi(2);
+}
+
+.draftFooter {
+  display: flex;
+  justify-content: space-between;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.draftTime {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.draftActions {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.caseCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.caseCover {
+  width: 100%;
+  height: 200rpx;
+}
+
+.caseBody {
+  padding: $spacing-md;
+}
+
+.caseTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.caseMeta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.emptyWrap {
+  padding: 100rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.emptyIcon {
+  font-size: 80rpx;
+  margin-bottom: $spacing-md;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}

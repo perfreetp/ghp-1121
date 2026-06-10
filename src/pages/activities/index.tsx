@@ -4,11 +4,13 @@ import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import type { Activity, ActivityType } from '@/types';
-import { mockActivities } from '@/data/activities';
+import { useAppStore } from '@/store/appStore';
 import EmptyState from '@/components/EmptyState';
 
 const ActivitiesPage: React.FC = () => {
-  const [activities, setActivities] = useState<Activity[]>(mockActivities);
+  const activities = useAppStore(s => s.activities);
+  const updateActivity = useAppStore(s => s.updateActivity);
+  const setActivities = useAppStore(s => s.setActivities);
   const [tab, setTab] = useState<'all' | ActivityType | 'mine'>('all');
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -36,7 +38,8 @@ const ActivitiesPage: React.FC = () => {
     return a.type === tab;
   });
 
-  const handleRegister = (a: Activity) => {
+  const handleRegister = (a: Activity, e: any) => {
+    e.stopPropagation?.();
     if (a.currentParticipants >= a.maxParticipants) {
       Taro.showToast({ title: '活动名额已满', icon: 'none' });
       return;
@@ -47,12 +50,10 @@ const ActivitiesPage: React.FC = () => {
         content: `确定要取消「${a.title}」的报名吗？`,
         success: (res) => {
           if (res.confirm) {
-            setActivities(prev => prev.map(item => {
-              if (item.id === a.id) {
-                return { ...item, isRegistered: false, currentParticipants: item.currentParticipants - 1 };
-              }
-              return item;
-            }));
+            updateActivity(a.id, {
+              isRegistered: false,
+              currentParticipants: a.currentParticipants - 1
+            });
             Taro.showToast({ title: '已取消报名', icon: 'success' });
           }
         }
@@ -60,13 +61,10 @@ const ActivitiesPage: React.FC = () => {
       return;
     }
 
-    console.log('[Activities] Register for:', a.id);
-    setActivities(prev => prev.map(item => {
-      if (item.id === a.id) {
-        return { ...item, isRegistered: true, currentParticipants: item.currentParticipants + 1 };
-      }
-      return item;
-    }));
+    updateActivity(a.id, {
+      isRegistered: true,
+      currentParticipants: a.currentParticipants + 1
+    });
     Taro.showToast({ title: '报名成功！', icon: 'success' });
   };
 
@@ -131,7 +129,7 @@ const ActivitiesPage: React.FC = () => {
       tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean)
     };
 
-    setActivities(prev => [newActivity, ...prev]);
+    setActivities([newActivity, ...activities]);
     Taro.showToast({ title: '发布成功！', icon: 'success' });
     closePublishModal();
   };
@@ -166,7 +164,11 @@ const ActivitiesPage: React.FC = () => {
             const isFull = a.currentParticipants >= a.maxParticipants;
             const progress = getProgress(a);
             return (
-              <View key={a.id} className={styles.activityCard}>
+              <View
+                key={a.id}
+                className={styles.activityCard}
+                onClick={() => Taro.navigateTo({ url: `/pages/actdetail/index?actId=${a.id}` })}
+              >
                 <View className={styles.activityCover}>
                   <Image
                     style={{ width: '100%', height: '100%' }}
@@ -236,7 +238,7 @@ const ActivitiesPage: React.FC = () => {
                             ? styles.btnDisabled
                             : styles.btnActive
                       )}
-                      onClick={() => handleRegister(a)}
+                      onClick={(e) => handleRegister(a, e)}
                     >
                       <Text>
                         {a.isRegistered ? '取消报名' : isFull ? '名额已满' : '立即报名'}

@@ -28,8 +28,8 @@ const MinePage: React.FC = () => {
     {
       icon: '🎨',
       label: '我的作品',
-      desc: '展示你的服务案例',
-      page: '/pages/works/index'
+      desc: '查看内容中心',
+      page: '/pages/mycontent/index'
     },
     {
       icon: '✍️',
@@ -178,7 +178,15 @@ const MinePage: React.FC = () => {
         <Text className={styles.viewMore}>查看 ›</Text>
       </View>
 
-      <Text className={styles.sectionTitle}>内容管理</Text>
+      <View className={styles.sectionTitleRow}>
+        <Text className={styles.sectionTitle}>内容管理</Text>
+        <Text
+          className={styles.viewAll}
+          onClick={() => navigateTo('/pages/mycontent/index')}
+        >
+          查看全部 ›
+        </Text>
+      </View>
       <View className={styles.menuGroup}>
         {contentMenu.map(renderMenuItem)}
       </View>

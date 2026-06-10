@@ -1,0 +1,247 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  padding: $spacing-lg;
+  background: $color-bg-page;
+  padding-bottom: 200rpx;
+}
+
+.questionCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.qHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.rewardBadge {
+  padding: $spacing-xs $spacing-md;
+  background: linear-gradient(135deg, $color-reward 0%, #FF5722 100%);
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  border-radius: $radius-md;
+}
+
+.statusBadge {
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.statusOpen {
+  background: rgba(255, 152, 0, 0.12);
+  color: $color-warning;
+}
+
+.statusResolved {
+  background: rgba(76, 175, 80, 0.12);
+  color: $color-success;
+}
+
+.qTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  line-height: $line-height-tight;
+  margin-bottom: $spacing-sm;
+}
+
+.qContent {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+  margin-bottom: $spacing-md;
+}
+
+.qTagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.qTag {
+  padding: $spacing-xs;
+  background: $color-primary-bg;
+  color: $color-primary;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+}
+
+.qMetaRow {
+  display: flex;
+  justify-content: space-between;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.avatar {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-round;
+}
+
+.userName {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.userMeta {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.statsRow {
+  display: flex;
+  gap: $spacing-xs;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.answerList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.answerCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.answerCardBest {
+  border: 3rpx solid $color-secondary-dark;
+  background: rgba(201, 169, 97, 0.06);
+}
+
+.aHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-sm;
+}
+
+.aUser {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.bestBadge {
+  padding: $spacing-xs $spacing-sm;
+  background: $color-secondary-dark;
+  color: $color-text-white;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+}
+
+.aContent {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+  margin-bottom: $spacing-md;
+}
+
+.aFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.aActions {
+  display: flex;
+  gap: $spacing-lg;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.likeBtn {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.liked {
+  color: $color-error;
+}
+
+.adoptBtn {
+  padding: $spacing-xs $spacing-md;
+  color: $color-primary;
+  border: 2rpx solid $color-primary;
+  border-radius: $radius-button;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  margin-left: auto;
+}
+
+.adoptBtnBest {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+}
+
+.writeArea {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $spacing-lg;
+  border-top: 1rpx solid $color-divider;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  gap: $spacing-md;
+}
+
+.writeInput {
+  flex: 1;
+  padding: $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  min-height: 100rpx;
+  max-height: 240rpx;
+}
+
+.submitBtn {
+  height: $button-height-md;
+  padding: $spacing-md;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

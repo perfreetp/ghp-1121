@@ -7,17 +7,22 @@ import type { Question, QaStatus, Answer } from '@/types';
 import { mockQuestions, mockAnswers } from '@/data/qa';
 import { mockUsers } from '@/data/users';
 import EmptyState from '@/components/EmptyState';
+import { useAppStore } from '@/store/appStore';
 
 type FilterType = 'all' | QaStatus | 'reward' | 'mine';
 
 const QaPage: React.FC = () => {
-  const [questions, setQuestions] = useState<Question[]>(mockQuestions);
+  const questions = useAppStore(s => s.questions);
+  const updateQuestion = useAppStore(s => s.updateQuestion);
+  const toggleCollected = useAppStore(s => s.toggleCollected);
+  const setQuestions = useAppStore(s => s.setQuestions);
   const [filter, setFilter] = useState<FilterType>('all');
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newContent, setNewContent] = useState('');
   const [newReward, setNewReward] = useState('50');
   const [newTags, setNewTags] = useState('');
+  const [expandedBest, setExpandedBest] = useState<string | null>(null);
 
   usePullDownRefresh(() => {
     setTimeout(() => {
@@ -33,9 +38,7 @@ const QaPage: React.FC = () => {
     { key: 'mine', label: '我的提问' }
   ];
 
-  const getBestAnswer = (q: Question): Answer | null => {
-    return mockAnswers.find(a => a.id === q.bestAnswerId) || q.answersList?.find(a => a.isBest) || null;
-  };
+
 
   const filteredQuestions = questions.filter(q => {
     if (filter === 'all') return true;
@@ -46,13 +49,7 @@ const QaPage: React.FC = () => {
   });
 
   const handleCollect = (qId: string) => {
-    setQuestions(prev => prev.map(q => {
-      if (q.id === qId) {
-        return { ...q, isCollected: !q.isCollected };
-      }
-      return q;
-    }));
-    Taro.showToast({ title: '操作成功', icon: 'success' });
+    toggleCollected('question', qId);
   };
 
   const handlePublish = () => {
@@ -104,8 +101,13 @@ const QaPage: React.FC = () => {
   };
 
   const openQuestion = (q: Question) => {
-    console.log('[QA] Open question:', q.id);
-    Taro.showToast({ title: '详情页开发中', icon: 'none' });
+    updateQuestion(q.id, { views: q.views + 1 });
+    Taro.navigateTo({ url: `/pages/qadetail/index?qId=${q.id}` });
+  };
+
+  const getBestAnswer = (q: Question): Answer | null => {
+    const list = q.answersList || [];
+    return list.find(a => a.isBest) || (q.bestAnswerId ? list.find(a => a.id === q.bestAnswerId) || null : null);
   };
 
   return (
@@ -156,21 +158,39 @@ const QaPage: React.FC = () => {
               <Text className={styles.questionTitle}>{q.title}</Text>
               <Text className={styles.questionContent}>{q.content}</Text>
 
-              {q.status === 'resolved' && getBestAnswer(q) && (
-                <View className={styles.bestAnswerBox}>
-                  <View className={styles.bestAnswerHeader}>
-                    <Text className={styles.bestAnswerBadge}>🏆 最佳答案</Text>
-                    <Text className={styles.bestAnswerUser}>
-                      from {getBestAnswer(q)!.userInfo.nickname}
+              {q.status === 'resolved' && getBestAnswer(q) && (() => {
+                const best = getBestAnswer(q)!;
+                const isExpanded = expandedBest === q.id;
+                return (
+                  <View
+                    className={styles.bestAnswerBox}
+                    onClick={(e) => {
+                      e.stopPropagation?.();
+                      setExpandedBest(isExpanded ? null : q.id);
+                    }}
+                  >
+                    <View className={styles.bestAnswerHeader}>
+                      <Text className={styles.bestAnswerBadge}>🏆 最佳答案</Text>
+                      <View style={{display:'flex', alignItems:'center', gap:'8rpx'}}>
+                        <Text className={styles.bestAnswerUser}>
+                          from {best.userInfo.nickname}
+                        </Text>
+                        <Text style={{fontSize:22, color:'#8F8A82'}}>{isExpanded ? '▲' : '▼'}</Text>
+                      </View>
+                    </View>
+                    <Text
+                      className={styles.bestAnswerContent}
+                      style={isExpanded ? {WebkitLineClamp: 'unset', display: 'block'} : {}}
+                    >
+                      {best.content}
                     </Text>
+                    <View className={styles.bestAnswerFooter}>
+                      <Text className={styles.bestAnswerLikes}>♥ {best.likes}</Text>
+                      <Text className={styles.bestAnswerTime}>{best.createdAt}</Text>
+                    </View>
                   </View>
-                  <Text className={styles.bestAnswerContent}>{getBestAnswer(q)!.content}</Text>
-                  <View className={styles.bestAnswerFooter}>
-                    <Text className={styles.bestAnswerLikes}>♥ {getBestAnswer(q)!.likes}</Text>
-                    <Text className={styles.bestAnswerTime}>{getBestAnswer(q)!.createdAt}</Text>
-                  </View>
-                </View>
-              )}
+                );
+              })()}
 
               <View className={styles.tagList}>
                 {q.tags.map((tag, idx) => (
